@@ -17,6 +17,11 @@ body {
     align-items: center;
     height: 100vh;
 }
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('service-worker.js');
+}
+</script>
 
 /* 앱 카드 */
 .app {
