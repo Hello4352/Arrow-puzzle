@@ -1,27 +1,25 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#764ba2">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Arrow Puzzle</title>
+
+<!-- PWA 설정 -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#764ba2">
 
 <style>
 body {
     margin: 0;
-    font-family: 'Pretendard', sans-serif;
+    font-family: sans-serif;
     background: linear-gradient(135deg, #667eea, #764ba2);
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
 }
-<script>
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('service-worker.js');
-}
-</script>
 
 /* 앱 카드 */
 .app {
@@ -33,20 +31,17 @@ if ('serviceWorker' in navigator) {
     text-align: center;
 }
 
-/* 제목 */
 .title {
     font-size: 22px;
     font-weight: bold;
 }
 
-/* 상태 표시 */
 .status {
     font-size: 14px;
     color: gray;
     margin: 10px 0;
 }
 
-/* 그리드 */
 .grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -54,7 +49,6 @@ if ('serviceWorker' in navigator) {
     margin: 15px 0;
 }
 
-/* 버튼 */
 .cell {
     aspect-ratio: 1;
     border-radius: 15px;
@@ -70,13 +64,11 @@ if ('serviceWorker' in navigator) {
     transform: scale(0.9);
 }
 
-/* 완료 상태 */
 .win {
     background: #4caf50;
     color: white;
 }
 
-/* 버튼 영역 */
 .controls {
     display: flex;
     gap: 10px;
@@ -88,7 +80,6 @@ if ('serviceWorker' in navigator) {
     border-radius: 12px;
     border: none;
     font-size: 14px;
-    cursor: pointer;
 }
 
 .reset {
@@ -99,16 +90,6 @@ if ('serviceWorker' in navigator) {
 .shuffle {
     background: #4dabf7;
     color: white;
-}
-
-/* 애니메이션 */
-.rotate {
-    animation: rotateAnim 0.3s ease;
-}
-
-@keyframes rotateAnim {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(90deg); }
 }
 </style>
 </head>
@@ -147,7 +128,7 @@ function render() {
 
         if (arrow === '→') btn.classList.add("win");
 
-        btn.onclick = () => handleClick(i, btn);
+        btn.onclick = () => handleClick(i);
 
         grid.appendChild(btn);
     });
@@ -185,23 +166,15 @@ function rotatePath(path) {
     });
 }
 
-function handleClick(index, btn) {
+function handleClick(index) {
     let path = getPath(index);
-
     rotatePath(path);
 
-    // 애니메이션
-    btn.classList.add("rotate");
-    setTimeout(() => btn.classList.remove("rotate"), 300);
-
-    updateStatus(path);
-    checkWin();
-    render();
-}
-
-function updateStatus(path) {
     document.getElementById("status").innerText =
         "경로: " + path.map(i => i+1).join(" → ");
+
+    checkWin();
+    render();
 }
 
 function checkWin() {
@@ -228,6 +201,11 @@ function shuffle() {
 }
 
 render();
+
+/* PWA: 서비스워커 등록 */
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('service-worker.js');
+}
 </script>
 
 </body>
